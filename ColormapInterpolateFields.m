@@ -1,4 +1,3 @@
-% Ian Leahy
 % 4/15/2021
 % Colormap colors Uniform in temperature between 0 and 310K.
 

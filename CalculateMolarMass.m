@@ -1,8 +1,7 @@
-% Ian Leahy
 % 11/20/17
-% Function to calculate the molar mass of a compound. 
+% Function to calculate the molar mass of a compound.
 % ElementCell should be a cell where each entry is an element in the
-% chemical formula. 
+% chemical formula.
 % FormulaVec is a vector with the numbers of each element per formula unit.
 
 function MolarMass = CalculateMolarMass(ElementCell,FormulaVec)

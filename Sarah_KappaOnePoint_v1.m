@@ -1,4 +1,3 @@
-% Sarah, Ian
 % 3/21/2022
 % Measure Thermal Conductivity at a fixed temperature.
 function Sarah_KappaOnePoint_v1(DAQ)
@@ -48,7 +47,7 @@ for ActiveCurrent = CurrentVector
     yokoampset_obj(ActiveCurrent,CurrentSource);
     for k = 1:SamplesPerStep
         ii=ii+1;
-        
+
         datacell.HeaterCurrent(ii) = ActiveCurrent;
         datacell.HeaterVoltage(ii) = readonevoltage(K2182a_Heater);
         datacell.Time(ii) = toc;
@@ -58,56 +57,56 @@ for ActiveCurrent = CurrentVector
         datacell.HotTemp(ii) = CXcell{1}(datacell.HotRes(ii));
         datacell.ColdTemp(ii) = CXcell{2}(datacell.ColdRes(ii));
         datacell.BathTemp(ii) = CXcell{3}(datacell.BathRes(ii));
-        datacell.DeltaT(ii) = datacell.HotTemp(ii) - datacell.ColdTemp(ii); 
+        datacell.DeltaT(ii) = datacell.HotTemp(ii) - datacell.ColdTemp(ii);
         datacell.HeaterPower(ii) = datacell.HeaterCurrent(ii).^2.*1000;
         datacell.SampleAverageTemp(ii) = (datacell.HotTemp(ii)+...
             datacell.ColdTemp(ii))./2;
-        
+
         if mod(ii,100)==0
             figure(DataPlot);
             % System Temperatures
-            subplot(3,2,1); 
-            plot(datacell.Time,datacell.BathTemp,'-b','DisplayName','Bath'); 
+            subplot(3,2,1);
+            plot(datacell.Time,datacell.BathTemp,'-b','DisplayName','Bath');
             hold on; plot(datacell.Time,datacell.SampleAverageTemp,'-r',...
-                'DisplayName','Sample Average'); hold off; 
-            Label_Plot('Time','s','T','K'); 
-            
-            subplot(3,2,2); 
-            yyaxis left; hold off; plot(datacell.Time,datacell.HeaterCurrent,'-k',...
-                'DisplayName','Heater Current'); 
-            Label_Plot('Time','s','I_{htr}','A'); 
-            yyaxis right; hold off; plot(datacell.Time,datacell.HeaterVoltage,'-r',...
-                'DisplayName','Heater Voltage'); 
-            Label_Plot('Time','s','V_{htr}','V'); 
-         
-            subplot(3,2,3); 
-            plot(datacell.Time,datacell.HotRes,'-r','DisplayName','R_{Hot}'); 
-            hold on; plot(datacell.Time,datacell.ColdRes,'-b',...
-                'DisplayName','R_{cold}'); hold off; 
-            Label_Plot('Time','s','R_{cernox}','\Omega'); 
+                'DisplayName','Sample Average'); hold off;
+            Label_Plot('Time','s','T','K');
 
-            subplot(3,2,4); 
-            plot(datacell.Time,datacell.HotTemp,'-r','DisplayName','T_{Hot}'); 
+            subplot(3,2,2);
+            yyaxis left; hold off; plot(datacell.Time,datacell.HeaterCurrent,'-k',...
+                'DisplayName','Heater Current');
+            Label_Plot('Time','s','I_{htr}','A');
+            yyaxis right; hold off; plot(datacell.Time,datacell.HeaterVoltage,'-r',...
+                'DisplayName','Heater Voltage');
+            Label_Plot('Time','s','V_{htr}','V');
+
+            subplot(3,2,3);
+            plot(datacell.Time,datacell.HotRes,'-r','DisplayName','R_{Hot}');
+            hold on; plot(datacell.Time,datacell.ColdRes,'-b',...
+                'DisplayName','R_{cold}'); hold off;
+            Label_Plot('Time','s','R_{cernox}','\Omega');
+
+            subplot(3,2,4);
+            plot(datacell.Time,datacell.HotTemp,'-r','DisplayName','T_{Hot}');
             hold on; plot(datacell.Time,datacell.ColdTemp,'-b',...
-                'DisplayName','T_{cold}'); hold off; 
-            Label_Plot('Time','s','T_{cernox}','K'); 
-            
-            subplot(3,2,5); 
-            plot(datacell.Time,datacell.DeltaT,'-b','DisplayName','Delta T'); 
-            hold off; 
-            Label_Plot('Time','s','\Delta T','K'); 
-            
-            subplot(3,2,6); 
-            plot(datacell.HeaterPower,datacell.DeltaT,'-ob','DisplayName','Delta T'); 
-            hold off; 
-            Label_Plot('Power','W','\Delta T','K'); 
+                'DisplayName','T_{cold}'); hold off;
+            Label_Plot('Time','s','T_{cernox}','K');
+
+            subplot(3,2,5);
+            plot(datacell.Time,datacell.DeltaT,'-b','DisplayName','Delta T');
+            hold off;
+            Label_Plot('Time','s','\Delta T','K');
+
+            subplot(3,2,6);
+            plot(datacell.HeaterPower,datacell.DeltaT,'-ob','DisplayName','Delta T');
+            hold off;
+            Label_Plot('Power','W','\Delta T','K');
             drawnow
         end
     end
-    
+
 end
 
-% % Try to close the figure if it is still open. 
+% % Try to close the figure if it is still open.
 try
     close(DataPlot)
 end

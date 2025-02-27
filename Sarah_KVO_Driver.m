@@ -1,10 +1,9 @@
-% Sarah C. Jones
-% 3/29/2022
+%  3/29/2022
 % Function to analyze data and output different plots
 
 function [MS] = Sarah_KVO_Driver(Calibration, PlotOpt)
     MS = LoadData();
-    
+
     switch Calibration
         case 'Recalculate'
             % New Hot & Cold Cernox Calibration
@@ -13,12 +12,12 @@ function [MS] = Sarah_KVO_Driver(Calibration, PlotOpt)
                 MS(i).HotResistanceCalibrated = MS(i).HotRes(:,1:MS(i).SampPerStep);
                 MS(i).ColdResistanceCalibrated = MS(i).ColdRes(:,1:MS(i).SampPerStep);
             end
-            
+
             SarahsPlot(MS,'BathTempCalibrate','HotResistanceCalibrate','r','Hot Cernox')
             xlabel('T [K]'); ylabel('Resistance [\Omega]');
             SarahsPlot(MS,'BathTempCalibrate','ColdResistanceCalibrate','b','Cold Cernox')
             xlabel('T [K]'); ylabel('Resistance [\Omega]');
-            
+
             deg = 7;
             [~,sinds] = sort([MS.BathTempCalibrate]);
             y = [MS.BathTempCalibrate];
@@ -28,12 +27,12 @@ function [MS] = Sarah_KVO_Driver(Calibration, PlotOpt)
             x = [MS.ColdResistanceCalibrate];
             x = x(sinds);
             ColdFit = RtoT_cal_inputRT(x,y,'fitRvT',deg,'Yes','Polynomial',[]);
-            
+
             for i = 1:length(MS)
                 MS(i).HotTempCalibrated = HotFit(MS(i).HotResistanceCalibrated);
                 MS(i).ColdTempCalibrated = CXCell_MN{2}(MS(i).ColdRes);
             end
-            
+
         case 'Calculated'
             % Applying new calibration
             temp = load('C:\Users\LeeLabLaptop\Documents\Sarah\KVO_Nitrogen\KVO_InSitu_MN_CalibrationCurves_4_11_22');
@@ -42,23 +41,23 @@ function [MS] = Sarah_KVO_Driver(Calibration, PlotOpt)
                 MS(i).HotTempCalibrated = CXCell_MN{1}(MS(i).HotRes);
                 MS(i).ColdTempCalibrated = CXCell_MN{2}(MS(i).ColdRes);
             end
-            
+
         case 'None'
             % do nothing
-            
+
         otherwise
             disp('Invalid Calibration')
     end
-    
+
     MS = ProcessData(.2,MS);  % Process data with a tolerance of 20%
     MS = Kappa(MS);
-    
+
     switch PlotOpt
         case 'Plot Raw and Calculated Data'
             temp = load('C:\Users\LeeLabLaptop\Documents\Sarah\KVO_Nitrogen\KVO_InSitu_MN_CalibrationCurves_4_11_22');
             CXCell_MN = temp.CXCell_MN;
             SarahPlot_RawAndCal_Kappa(CXCell_MN);
-            
+
         case 'Delta T vs Power'
            figure('name','Delta T vs Power');
            colorz = jet(length(MS));
@@ -74,22 +73,22 @@ function [MS] = Sarah_KVO_Driver(Calibration, PlotOpt)
            MyAxes = gca;
            MyAxes.CLim = [80,290];
            %MyColorbar.Ticks = [80:20:290];
-           
-        case 'Kappa v T' 
+
+        case 'Kappa v T'
            xarg = 'TotalAverageTemp';
            yarg = 'Kappa';
            MyColor = [0 0 1];
            PlotTitle = '\kappa vs Temperature';
            SarahsPlot(MS,xarg,yarg,MyColor,PlotTitle);
            xlabel('T [K]'); ylabel('\kappa [W/m\cdotK]');
-           
+
         case 'None'
            % No output
-           
-        otherwise 
-            disp('Invalid PlotOpt'); 
+
+        otherwise
+            disp('Invalid PlotOpt');
     end
-    
+
 end
 
 function [MS] = LoadData()
@@ -106,13 +105,13 @@ function [MS] = LoadData()
        MS(i).Datenum = filedata(i).datenum;
     end
 end
-                
+
 function [MS] = ProcessData(Tolerance,MS)
     % Find new Delta T from recalibrated Hot and Cold Temps
     for i = 1:length(MS)
         MS(i).DeltaTCalibrated = MS(i).HotTempCalibrated - MS(i).ColdTempCalibrated;
     end
-    
+
     for i = 1:length(MS)
         HeaterCurrentSteps = 4;             % This should be modified to be a calculation
         LogicalVector2 = logical([ones(1,HeaterCurrentSteps*MS(i).SampPerStep),zeros(1,MS(i).SampPerStep)]);  % Logic vector with 0's for I = 0
@@ -126,7 +125,7 @@ function [MS] = ProcessData(Tolerance,MS)
         MS(i).DeltaTStepsCut = MS(i).DeltaTCalibrated(CutSteps);                          % Cut Delta T to tolerance
         MS(i).HeaterPowerStepsCut = MS(i).HeaterPower(CutSteps);                % Cut Power to tolerance
     end
-    
+
     % Getting sample avg temp and sorting it
     for i = 1:length(MS)
         MS(i).TotalAverageTemp = mean(MS(i).SampleAverageTemp);     % Create new field for single Total Average Temp per .mat data file
@@ -134,9 +133,9 @@ function [MS] = ProcessData(Tolerance,MS)
     TotalAverageTemp = vertcat(MS.TotalAverageTemp);                % Create Total Average Temp vector from structure field
     [Temp,Index] = sort(TotalAverageTemp);                           % Sort Total Average Temp vector and index values
     MS = MS(Index);
-   
+
 end
-    
+
 function [MS] = Kappa(MS)
     CrossSectArea = 1.2e-3 * 0.3e-3;
     Length = 3e-3;

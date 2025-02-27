@@ -1,6 +1,5 @@
 % ProcessIR_TransmissionData_v2
 % Created 6/30/22, Edited 7/1/22
-% Ian Leahy
 %
 % Input Arguments:
 % LoadOption (String)
@@ -56,7 +55,7 @@
 %   Norm');
 function ProcessIR_TransmissionData_v2(LoadOption,SampleOption,PlotOption,NormalizationOption)
 
-[WhereIsTheData] = SetFilePathHere(); 
+[WhereIsTheData] = SetFilePathHere();
 [MS] = LoadIRData(LoadOption,SampleOption,WhereIsTheData);
 
 switch PlotOption
@@ -88,7 +87,7 @@ switch PlotOption
         [ColorbarHandle] = GenericIRSurfacePlot(MS,zarg);
         title([SampleOption,' ',NormalizationOption]);
         CBPosition=get(ColorbarHandle,'position');
-        
+
         % S = ['set(gca,''CLim'' get(gca,''CLim'')+['  num2str(0.02) ',0])' ];
         S = ['set(gca,''CLim'',[get(gcbo,''Value''),1])' ];
         uic=uicontrol('style','slider','units','normalized',...
@@ -103,20 +102,20 @@ switch PlotOption
         Tinds2 = and(Tinds,ZInterp<=.975);
         plot3(XInterp(Tinds2),YInterp(Tinds2),ZInterp(Tinds2),'or','MarkerFaceColor',brc([0 0 0],.5))
         Tinds2 = and(Tinds,ZInterp<=.90);
-        
+
         T1 = clusterdata(X,3);
-        
+
         SizeXI = size(XInterp);
         xv = reshape(XInterp,SizeXI(1).*SizeXI(2),1);
-        
+
         SizeYI = size(YInterp);
         yv = reshape(YInterp,SizeYI(1).*SizeYI(2),1);
-        
+
         SizeZI = size(ZInterp);
         zv = reshape(ZInterp,SizeZI(1).*SizeZI(2),1);
-        
+
         tv = reshape(Tinds2,SizeZI(1).*SizeZI(2),1);
-        
+
         T1 = clusterdata([xv(tv),yv(tv),zv(tv)],16);
     otherwise
         error('Invalid PlotOption! Try one that exists or create a new one!');
@@ -291,7 +290,7 @@ switch LoadOption
         error('Invalid LoadOption in LoadIRLines! Make sure you input either Load 1 or Load 2!');
 end
 cd(WhereIsTheData);
-cd(LoadStr); 
+cd(LoadStr);
 
 switch SampleOption
     case 'CsYbSe2'

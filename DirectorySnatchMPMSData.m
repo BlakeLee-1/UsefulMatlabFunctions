@@ -1,8 +1,7 @@
 %Load a directory of MPMS data
-%Ian Leahy
 %Jan 10,2016
 % Input fileroot and MeasurementType and return outcell, a cell structure
-% containing the magnetization data. 
+% containing the magnetization data.
 %fileroot - Directory where all datafiles are located
 %MeasurementType - RvsT
 %                - RvsH

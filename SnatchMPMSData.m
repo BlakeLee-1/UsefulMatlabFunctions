@@ -1,4 +1,3 @@
-%Ian Leahy
 %Jan 10, 2016
 %New MPMS load code -- much simpler than loadMPMSBatch.
 

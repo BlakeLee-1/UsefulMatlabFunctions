@@ -1,5 +1,4 @@
-% Ian Leahy, Peter Siegfried, Chris Pocs
-% July 19, 2019
+%July 19, 2019
 % File for processing RTM data
 
 function [SortedMC]=BaIrO_RTM_DriverJuly(LoadOpt,PlotOpt,BPower,FitAngleOpt,orderedplot,derivopt)
@@ -13,12 +12,12 @@ smopt = 20;
 for i=1:length(MC)
     switch PlotOpt
         case 'B All'
-            
+
             hold on; plot(MC{i}.Field.^BPower,MC{i}.Frequency,'.','Color',...
                 brc(colorz(i,:),.5),'DisplayName',MC{i}.TLeg,'MarkerSize',8)
             hold on; plot(MC{i}.Field.^BPower,smooth(MC{i}.Frequency,smopt),'-','Color',...
                 colorz(i,:),'DisplayName',[MC{i}.TLeg,' Smooth'])
-            
+
         case 'B Up'
             lim = -.0001;
             keepinds = diff(MC{i}.Field)>lim;
@@ -26,7 +25,7 @@ for i=1:length(MC)
                 brc(colorz(i,:),.5),'DisplayName',MC{i}.TLeg,'MarkerSize',8)
             hold on; plot(MC{i}.Field(keepinds).^BPower,smooth(MC{i}.Frequency(keepinds),smopt),'.','Color',...
                 colorz(i,:),'DisplayName',[MC{i}.TLeg,' Smooth'])
-           
+
         case 'B Up Temp'
             lim = -.0001;
             keepinds = diff(MC{i}.Field)>lim;
@@ -34,7 +33,7 @@ for i=1:length(MC)
                 brc(colorz(i,:),.5),'DisplayName',MC{i}.TLeg,'MarkerSize',8)
             hold on; plot(MC{i}.Field(keepinds).^BPower,smooth(MC{i}.Frequency(keepinds)-46480,smopt),'.','Color',...
                 colorz(i,:),'DisplayName',[MC{i}.TLeg,' Smooth'])
-            
+
         case 'B Down'
             lim = -.0001;
             keepinds = diff(MC{i}.Field)<lim;
@@ -42,14 +41,14 @@ for i=1:length(MC)
                 brc(colorz(i,:),.5),'DisplayName',MC{i}.TLeg,'MarkerSize',8)
             hold on; plot(MC{i}.Field(keepinds).^BPower,smooth(MC{i}.Frequency(keepinds),smopt),'-','Color',...
                 colorz(i,:),'DisplayName',[MC{i}.TLeg,' Smooth'])
-            
+
         case 'B Index'
-            
+
             hold on; plot(MC{i}.Frequency,'.','Color',...
                 brc(colorz(i,:),.5),'DisplayName',MC{i}.TLeg,'MarkerSize',8)
             hold on; plot(smooth(MC{i}.Frequency,smopt),'-','Color',...
                 colorz(i,:),'DisplayName',[MC{i}.TLeg,' Smooth'])
-            
+
     end
 end
 % ylim([4.544e4,4.546e4]);
@@ -61,13 +60,13 @@ switch FitAngleOpt
         FitAngleDep(MC);
     case 'Fit 20K'
         FitAngleDep_20K(MC);
-        
+
     case 'Fit S3 4K'
         FitAngleDep_4K(MC);
-        
+
     case 'Fit S3 4K Directional'
         FitAngleDep_4K_Directional(MC,'Down')
-        
+
     case 'Fit S3 FFS'
         FitAngleDep_4K_Directional_FFS(MC,'Down','Sample 3 All');
     case 'Fit S4 FFS'
@@ -75,7 +74,7 @@ switch FitAngleOpt
     case 'Fit S4 Angle FFS'
         FitAngleDep_4K_Directional_FFS(MC,'Down','Sample 4 Angles');
     case 'No'
-        
+
 end
 angles = LU_RTM(LoadOpt);
 SortedMC = OrderData(MC,angles);
@@ -119,10 +118,10 @@ switch derivopt
             shift = shift - 10;
         end
         Label_Plot(['B'],['T'],'df/dH','Hz/T');
-        
-        
+
+
     case 'None'
-        
+
 end
 
 % PlotSurface(SortedMC);
@@ -178,16 +177,16 @@ for i=1:length(DStore)
         outcell{i}.IDNum = str2num(DStore(i).name(2:4));
         %         outcell{i}.Temp = Angles(FileInd==outcell{i}.IDNum);
         outcell{i}.Temp = Angles(i);
-        
+
     catch
         outcell{i}.IDNum = 9999;
         outcell{i}.Temp = 0;
-        
+
     end
-    
+
     %         outcell{i}.TLeg = [num2str(outcell{i}.Temp), ' K'];
     outcell{i}.TLeg = [num2str(outcell{i}.Temp), ' deg. df = ',outcell{i}.name];
-    
+
 end
 
 end
@@ -437,7 +436,7 @@ for j=1:length(fieldvals)
         clipinds = and(xin>=(fieldvals(j)-meanwidth),xin<=(fieldvals(j)+meanwidth));
         ang.(['freq_',num2str(fieldvals(j))])(i) = trimmean(yin(clipinds),20);
         ang.(['Field_',num2str(fieldvals(j))])(i) = mean(xin(clipinds));
-        
+
     end
 end
 switch sampleopt
@@ -455,7 +454,7 @@ for i=1:length(fieldvals)
     %         'Color',colorz(i,:),'MarkerFaceColor',brc(colorz(i,:),.8))
     plot(angles,ang.(['freq_',num2str(fieldvals(i))])-ang.freq_0,'-o','DisplayName',[num2str(fieldvals(i)),' T'],...
         'Color',colorz(i,:),'MarkerFaceColor',brc(colorz(i,:),.8))
-    
+
 end
 Label_Plot('Angle','deg','f','Hz');
 title(diropt);
@@ -484,7 +483,7 @@ for j=1:length(fieldvals)
         clipinds = and(xin>=(fieldvals(j)-meanwidth),xin<=(fieldvals(j)+meanwidth));
         ang.(['freq_',num2str(fieldvals(j))])(i) = trimmean(yin(clipinds),20);
         ang.(['Field_',num2str(fieldvals(j))])(i) = mean(xin(clipinds));
-        
+
     end
 end
 switch sampleopt
@@ -504,7 +503,7 @@ for i=1:length(fieldvals)
         'Color',colorz(i,:),'MarkerFaceColor',brc(colorz(i,:),.8));
     plot(angles+180,ang.(['freq_',num2str(fieldvals(i))]),'-o','DisplayName',[num2str(fieldvals(i)),' T'],...
         'Color',colorz(i,:),'MarkerFaceColor',brc(colorz(i,:),.8));
-    
+
 end
 Label_Plot('Angle','deg','f','Hz');
 title(diropt);
@@ -536,8 +535,8 @@ switch option
                 Temperatures(i) = Temps(FileInd==runID);
                 angleout(i) = Angles(FileInd==runID);
             end
-            
-            
+
+
         end
     case 'Phi1 2K'
         fr = 'E:\IanComputer\Documents\Physics\Minhyea Lee Research\LosAlamos_July2019\BaIrO_Phi1_FFH_1p5K\';
@@ -594,7 +593,7 @@ for i=1:length(MC)
             xinterp = 0:.01:65;
             MC{i}.FieldDeriv = xinterp(1:end-1);
             MC{i}.FreqDeriv = diff(MC{i}.fitresult(xinterp))./.01;
-            
+
         otherwise
             disp('Invalid Option Selected');
     end
@@ -614,12 +613,12 @@ if strcmp(RaworDeriv,'Raw')
         FieldTemp = MC{i}.Field(keepinds);
         FreqHold = MC{i}.Frequency(keepinds);
         FreqTemp = FreqHold - mean(FreqHold(FieldTemp<2));
-        
+
         InterpField = linspace(0,max(FieldTemp),601)';
         InterpFreq = Interp1NonUnique(FieldTemp,FreqTemp,InterpField);
         %     Angles = repmat(MC{i}.Temp,length(InterpField),1);
         Angles = MC{i}.Temp;
-        
+
         Xvals=[Xvals;InterpField];
         Yvals=[Yvals;Angles];
         %     tempz=Axiscell{i}.diffwithang(Axiscell{i}.Field>fieldlim)-Axiscell{subtractval}.diffwithang(Axiscell{i}.Field>fieldlim);
@@ -628,7 +627,7 @@ if strcmp(RaworDeriv,'Raw')
         %     else
         %     tempz=Axiscell{i}.diffwithang(Axiscell{i}.Field>fieldlim);
         %     end
-        
+
         Zvals=[Zvals InterpFreq];
     end
 end
@@ -637,7 +636,7 @@ if strcmp(RaworDeriv,'Deriv')
         InterpField = linspace(0,max(MC{i}.FieldDeriv),601)';
         InterpDerivFreq = Interp1NonUnique(MC{i}.FieldDeriv,...
             MC{i}.FreqDeriv,InterpField);
-        
+
         %     Xvals=[Xvals Axiscell{i}.Temp];
         Yvals=[Yvals;MC{i}.Temp];
         Zvals=[Zvals InterpDerivFreq];

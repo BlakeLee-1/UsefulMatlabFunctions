@@ -1,4 +1,3 @@
-% Ian Leahy
 % 1/25/2022
 % CEF Magnetotropic Modeling User Friendly Rewrite
 % ======================================================================
@@ -355,7 +354,7 @@ switch AnalysisOption
         UpperBounds = 100.*ones(1,length(Bmn_Parameters));
 %         LowerBounds = InitialGuess;
 %         UpperBounds = InitialGuess;
-%         
+%
         %         LowerBounds = [-.17,-100.*ones(1,length(Bmn_Parameters)-1)];
         %         UpperBounds = [-.17,100.*ones(1,length(Bmn_Parameters)-1)];
 
@@ -529,14 +528,14 @@ switch AnalysisOption
                 CurrentTemperature,InterpField,muB,kB,gJ,A1);
             plot(axlist(2),InterpField,kab_Calc,'-','Color',...
                 brc([0 0 0],.5),'DisplayName',[num2str(CurrentTemperature),' K Fit']);
-            
+
 
             kc_Calc = Magnetotropic_C_vs_H(CEF_Hamiltonian_MatrixFit,...
                 ZeroEnergy_Fit,ID,Jx,Jz,Jxx_Parameter,Jzz_Parameter,...
                 CurrentTemperature,InterpField,muB,kB,gJ,A1);
             plot(axlist(3),InterpField,kc_Calc,'-','Color',...
                 brc([0 0 0],.5),'DisplayName',[num2str(CurrentTemperature),' K Fit']);
-            
+
         end
         axes(axlist(1)); hold on;
         TemperaturesPlot = 1:300;
@@ -1091,7 +1090,7 @@ switch SampleOption
         ProcessParameters.Chi_PerturbationTerms = [-1.94e-3,-1.53e-4]; % [az0,ax0
 %         ProcessParameters.Chi_A0Vals            = [.9783,2.903]; % [A0z,A0x]
         ProcessParameters.Chi_A0Vals            = [1.0124,2.808]; % [A0z,A0x]
-        
+
         ProcessParameters.ChiFitResultsWeight = 50;
 
         % Eigenenergies determined from raman data. Bound eigenvalues to be
